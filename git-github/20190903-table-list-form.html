@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .a {
+            background: red;
+        }
+
+        p {
+            background: royalblue;
+        }
+
+        #aa {
+            background: yellow;
+        }
+
+        table {
+            border-spacing: 0.5px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            /* border-collapse:collapse; = 겹쳐짐 */
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        table#tab1 {
+            width: 100%;
+            background-color: whitesmoke;
+        }
+
+        table#tab1 tr:nth-child(even) {
+            background-color: gray;
+        }
+
+        table#tab1 tr:nth-child(odd) {
+            background-color: white;
+            color: black;
+        }
+
+        table#tab1 th {
+            background-color: black;
+            color: whitesmoke;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="a">Hello World!</h1>
+    <p id="aa">p stands for paragraph</p>
+    <table id="tab1" style="width:100%">
+        <caption>Wanted List</caption>
+        <tr>
+            <th colspan="2">Full Name</th>
+            <th>Age</th>
+            <th>Bounty</th>
+        </tr>
+        <tr>
+            <td>Bob</td>
+            <td>Luciliano</td>
+            <td>999</td>
+            <td>$1,000,000</td>
+        </tr>
+        <tr>
+            <td>Seville</td>
+            <td>Movebitch</td>
+            <td>420</td>
+            <td>$4,200,000</td>
+        </tr>
+        <tr>
+            <td>Arizona</td>
+            <td>IceT</td>
+            <td>Unknown</td>
+            <td>$10</td>
+        </tr>
+        <tr>
+            <td>Runninout</td>
+            <td>Ofnames</td>
+            <td>Undefined</td>
+            <td>$66</td>
+        </tr>
+    </table>
+    <h2>Ordered List</h2>
+    <ol type="I">
+        <li>Roman Numeral 1</li>
+        <li>Roman Numeral 2</li>
+        <li>Roman Numeral 3</li>
+    </ol>
+    <h2>Unordered list</h2>
+    <ul style="list-style-type: disc">
+        <li>bullet 1</li>
+        <li>bullet 2</li>
+        <li>bullet 3</li>
+    </ul>
+    <h2>HTML Forms</h2>
+
+    <form action="/action_page.php" target="_blank" method="POST">
+        <fieldset>
+            <legend>Full Name:</legend>
+            First Name<br>
+            <input type="text" name="firstname" value="Lenovo">
+            <br>
+            Last Name<br>
+            <input type="text" name="lastname" value="Laptop">
+            <br>
+        </fieldset>
+        What Age Group do You Belong To?<br>
+        <input type="radio" name="age" value="10~20">10~20<br>
+        <input type="radio" name="age" value="20~30">20~30<br>
+        <input type="radio" name="age" value="30~40">30~40<br>
+        <input type="radio" name="age" value="40+">40+
+        <br><br>
+        <!-- Always use method="POST" for classified information! -->
+        how much money do you make yearly?
+        <br>
+        <select name="salary">
+            <option value="0~20,000">$0~$20,000</option>
+            <option value="20,000~50,000">$20,000~50,000</option>
+            <option value="50,000~100,000">$50,000~$100,000</option>
+            <option value="100,000+">$100,000+</option>
+        </select>
+        <br><br>
+        <textarea name="message" rows="5" cols="35">Nothing Matters</textarea>
+        <br><br>
+        <input type="submit" name="submit" value="It's all pointless">
+    </form>
+</body>
+
+</html>
