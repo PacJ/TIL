@@ -1,6 +1,9 @@
 form   form문생성
 fieldset    연관성있는 form문 요소들의 묶음
 legend 입력문자 주변으로 박스생성
+required: 필수입력으로됨
+placeholer:입력값 서식 힌트(위에뜨고 입력하면 사라짐)
+name:form제출할때 제출된 값의 이름 정함.
 
 입력내용 숨기기 - class="a11y-hidden"
 
