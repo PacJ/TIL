@@ -1,0 +1,25 @@
+text-align:center;
+line-height: (height와 동일) - 텍스트 중앙정렬
+
+중앙정렬후
+::after{
+  content:"";
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: url(./images/coffee.png) no-repeat;
+}
+이미지로 텍스트 덮음.
+
+float 후 width,height없이는 부모요소의 크기를 상속받음, 줄바꿈일어날수있음.
+
+flexbox는 줄바꿈크기 허용x, 정해진 크기에 구겨넣음.
+flex-flow:(flex-direction flex-wrap) 동시지정
+flex:(grow shrink basis) flex속기법, 기본값 flex:0 1 auto(크기auto, 1만큼 shrink)
+auto: width 와 height크기로 지정되지만, flex container에 남은 공간을 다 차지하게 늘어남, 또는 최소크기로 container에 맞게 줄어듬.
+flex-basis 와 width 둘다 지정시, flex-basis가 우선순위로 적용됨
+
+
+
