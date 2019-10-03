@@ -1,29 +1,43 @@
 ﻿# JavaScript 개발 환경
 ## JavaScript 실행 환경
 * 모든 브라우저는 JavaScript 실행가능.
+
 * Node.js도 자바스크립트 엔진 내장,  JavaScript 실행가능.
+
 * 브라우저는 웹 페이지를 화면에 랜더링할목적, Node.js 는 서버 개발 환경을 제공 하는것이 목적.
+
 * 따라서 Node.js와 브라우저에서 JS의 코어인 ECMAScript를 실행할수 있지만 이외에 추가적인 기능은 호환되지 않는다.
+
 * 보안상으로 Web API에서는 File 시스템을 제공하지 않는다.
-* 브라우저는 client-side Web API를 지원한다. Node.js는 client side Web API를 지원하지 않고 ECMAScript와 Node.js 고유의 API를 지원한다.
+
+* 브라우저는 client-side Web API를 지원한다. Node.js는 client side Web API를 지원하지 않고 ECMAScript와 Node.js 고유의 Host API를 지원한다.
+
+  ![img](https://poiemaweb.com/assets/fs-images/3-1.png)
 
 ## 웹 브라우저 작동
-* 브라우저의 핵심기능: 웹페이지를 서버의 요청(Request)과 응답(Response)을 받아 표시하는것
-* 자바스크립트는 script태그를 만나면 랜더링엔진에게서 권한을 넘겨받아 자바스크립트 엔진이 파일을 로드하고 파싱하여 실행.
-* 자바스크립트는 런타임에 컴파일되며 실행파일이 생성되지 않고 인터프리터의 도움없이 실행할수 없다. 컴파일러 언어라고 할수 없다.
-* 소스코드는 문자열로 구성되어 있으므로, 소스 코드를 해석하여 문법적 의미와 구조를 갖는 자료 구조인 AST(Abstract Syntax Tree)를 생성, 이걸 통해 바이트 코드 생성후 실행.
-	* Tokenizing: 소스 코드 문자열을 분석(Lexical analysis)하여 의미를 갖는 코드의 최소단위(Token)들로 분리. 
+브라우저의 핵심기능: 웹페이지를  Client의 요청(Request)과 Server의 응답(Response)을 받아 표시하는것
+
+* 웹사이트로 이동시, 서버측으로부터 HTML,CSS,JavaScript 다운로드(Loading)하고 페이지 나타냄.
+
+  * Domain주소 뒤에 추가로 뭐가 없으면(ex: google.com), 페이지의 index.html을 받을 Request를 보내고, 받고난뒤에 html을 로딩한뒤 파싱을 하면서 DOM tree를 만들기 시작한다.
+  * 파싱중에, HTML의 <link>태그를 만나면, DOM tree 생성이 중단되고, link된 CSS 를 Load, Parse 하고 CSSOM tree를 만든한뒤에, 다시 HTML의 파싱과 DOM tree 생성을 재개한다.
+  * 파싱중에 <script> 태그를 만나면, 다시 파싱과 DOM tree를 중단하고, JavaScript부터 load, parse 하고 Syntax tree를 만든후에 다시 HTML로 파서 권한이 돌아가서 남은 파싱을 완료한다.
+    * Syntax tree는 DOM tree 와 CSSOM tree 를 조작하고 수정한다.
+  * Script 태그의 위치에따라 블로킹이 생겨 DOM 생성이 지연될수도 있다. HTML이 DOM객체로 변환되기 이전에 JavaScript가 실행되면 블로킹이된다. 따라서 Script태그 위치는 중요하다(보통 body태그 끝나기전에 넣음).
+    * async: 웹페이지의 파싱과 외부 스크립트 파일의 다운로드가 동시에 진행. script 다운 완료후 실행됨.
+    * defer:웹페이지 파싱과 외부 스크립트 파일 다운로드 동시 진행. 스크립트는 웹페이지 파싱 이후 실행.
+  * DOM tree, CSSOM tree가 만들어지면, 둘이 합쳐져 Render tree를 만들고, Render tree를 기반으로 painting이 시작되고 웹페이지가 표시된다.
+
+  
+
+* 소스코드는 문자열로 구성되어 있으므로, 소스 코드를 해석하여 문법적 의미와 구조를 갖는 구조인 AST(Abstract Syntax Tree)를 생성, 이걸 통해 바이트 코드 생성후 실행.
+	* Tokenizing: 소스 코드 문자열을 분석(Lexical analysis)하여 의미를 갖는 코드의 최소단위인 토큰(Token)들로 쪼갠다.
 	* Parsing: 토큰들의 집합을 구문 분석(Syntactic analysis)하여 AST생성.
 	* 코드 실행: 생성된 AST는 interpreter를 실행할수있는 Intermediate code인 bytecode로 변환되고 interpreter에 의해 실행된다.
+* AST는 Interpreter 나 Compiler만이 사용하는것이 아니다. AST로 TypeScript, Prettier Babel같은 트랜스파일러도 구현할 수 있다.
 
-* 실행 완료후, 다시 HTML로 파서 권한을 넘겨 브라우저가 중지했던 시점부터 DOM 생성을 재개.
 
-* Script 태그의 위치에따라 블로킹이 생겨 DOM 생성이 지연될수도 있다. HTML이 DOM객체로 변환되기 이전에 JavaScript가 실행되면 블로킹이된다. Script태그 위치는 중요하다.
-	* 이를 막기위해 async와 defer attribute들이 script 속성에 추가됨.
-	  * async: 웹페이지의 파싱과 외부 스크립트 파일의 다운로드가 동시에 진행. script 다운 완료후 실행됨.
-	  
-	  * defer:웹페이지 파싱과 외부 스크립트 파일 다운로드 동시 진행. 스크립트는 웹페이지 파싱 이후 실행.
-	 
+
 ## 개발자 도구
 | 패널 | 설명 |
 | :------: | :-----|

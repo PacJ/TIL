@@ -1,18 +1,16 @@
 ﻿
 
-# 2019-10-01 Javascript
-프로그래밍이란: 컴퓨터에게 실행명령을 내리는 일종의 커뮤니케이션. 컴퓨터가 인간의 의도를 알아들을수있도록 컴퓨팅적인 사고로 생각을 하고 프로그래밍을 해야한다.
+# 2019-10-01 기본개념, Javascript
+* 프로그래밍이란: 컴퓨터에게 실행명령을 내리는 일종의 커뮤니케이션. 컴퓨터가 인간의 의도를 알아들을수있도록 컴퓨팅적인 사고로 생각을 하고 프로그래밍을 해야한다.
 
-ascii code, unicode: 사람의 문자들을 컴퓨터가 이해할수 있게 만든것
-
-ascii code(America Standard Code for Information Interchange): 7비트 문자코드이며 비트 하나하나에 유니크한 문자가 들어있음. 256가지 경우의 수를 가지고있으며, 경우들이 서로 다른문자를 나타냄. 256가지 경우의수로 모든 언어를 나타낼수 없다.
-
-unicode: 유니코드는 ascii코드의 superset(확장판).
-0~127의 숫자가 ascii코드와 동일한 값, unicode는 2<sup>21</sup> 미만의 경우의수를 가지고있음. 플래트폼, 언어, 프로그램과 상관없이 모든문자를 나타낼수있다 유니코드 문자는 UTF-8, UTF-16, UTF-32 의 인코딩을 사용한다.
+* ascii code, unicode: 사람의 문자들을 컴퓨터가 이해할수 있게 만든것
+  * ascii code(America Standard Code for Information Interchange): 8비트 문자코드이며 비트 하나하나에 유니크한 문자가 들어있음. 8비트지만 하나의 비트는 통신용으로 사용. 256가지 경우의 수를 가지고있으며, 경우들이 서로 다른문자를 나타냄. 256가지 경우의수로 모든 언어를 나타낼수 없다. 8-bit 인코딩사용.
+  * unicode: 유니코드는 ascii코드의 superset(확장판).
+    0~127의 숫자가 ascii코드와 동일한 값. 각 문자마다 Code Point를 주고, 인코딩 선언으로 비트로 나타낸다. Variable bit encoding 사용: UTF-8, UTF-16, UTF-32 등, 인코딩은 문자하나가 가지는 비트를 정한다.
 
 
 ### compiler/interpreter:
- 컴퓨터는 0과 1밖에 이해할수 없다. 이런 코드를 machine code라고 부른다. 인간의 언어로 만든 프로그램은 source code라고 한다. 소스코드를 머신코드로 변환하기위해  compiler와 interpreter를 사용한다. 
+컴퓨터는 0과 1밖에 이해할수 없다. 이런 코드를 machine code라고 부른다. 인간의 언어로 만든 프로그램은 source code라고 한다. 소스코드를 머신코드로 변환하기위해  compiler와 interpreter를 사용한다. 
 
 #### Interpreter: 
 * 프로그램을 한 statement씩 변환한다.
@@ -45,8 +43,10 @@ Semantics = 의미(associated meaning of phrases)
 * ECMAScript는 자바스크립트의 표준 사양인 ECMA-262를 말함.
 * 표준 빌트인 객체(언어의 타입, 값, 함수 등)과 핵심 문법을 규정한ㄷ.
 * 각 브라우저 제조사는 이를 준수하여 브라우저 JavaScript엔진을 구현.
+* JavaScript는 웹브라우저에서 동작하는 유일한 프로그래밍언어, interpreter 언어이다.( 사실 compiler, interpreter 장점 결합함)
+* 다른 언어들과 다르게 프로토타입 기반 상속이되고, 일급 함수 개념으로 함수형 프로그래밍이 가능하다.
 * JavaScript는 일반적으로 ECMAScript와 브라우저가 별도 지원하는 client-side Web API(DOM,BOM,SVG,Web Storage) 등을 아우르는 개념. 
-* JavaScript는 명령형(imperative), 함수형(functional), 프로토타입 기반(prototype-based) 객채지향 프로그래밍을 지원하는 멀티 프로그래밍 언어.
+* JavaScript는 명령형(imperative), 함수형(functional), 프로토타입 기반(prototype-based) 객채지향 프로그래밍을 지원하는 멀티패러다임(객체지향형, 절차지향형(명령형), 함수지향형 다되는) 언어.
 
 ## Ajax
 * JavaScript로 서버와 브라우저가 비동기적(asynchronous)으로 데이터를 교환할수 있게 해주는 통신 기능
