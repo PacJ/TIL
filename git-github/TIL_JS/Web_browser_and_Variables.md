@@ -19,22 +19,22 @@
 
 * 웹사이트로 이동시, 서버측으로부터 HTML,CSS,JavaScript 다운로드(Loading)하고 페이지 나타냄.
 
-  * Domain주소 뒤에 추가로 뭐가 없으면(ex: google.com), 페이지의 index.html을 받을 Request를 보내고, 받고난뒤에 html을 로딩한뒤 파싱을 하면서 DOM tree를 만들기 시작한다.
-  * 파싱중에, HTML의 <link>태그를 만나면, DOM tree 생성이 중단되고, link된 CSS 를 Load, Parse 하고 CSSOM tree를 만든한뒤에, 다시 HTML의 파싱과 DOM tree 생성을 재개한다.
-  * 파싱중에 <script> 태그를 만나면, 다시 파싱과 DOM tree를 중단하고, JavaScript부터 load, parse 하고 Syntax tree를 만든후에 다시 HTML로 파서 권한이 돌아가서 남은 파싱을 완료한다.
-    * Syntax tree는 DOM tree 와 CSSOM tree 를 조작하고 수정한다.
+  * Domain주소 뒤에 추가로 뭐가 없으면(ex: google.com), 페이지의 index.html을 http Request(GET /index.html) 보내서 받고, 받고난뒤에 html을 로딩한뒤 파싱을 하면서 DOM tree를 만들기 시작한다.
+    * URL이 http(HyperText Transfer Protocol)로 시작한다: 브라우저가 http를 사용해 이 URL에 관련된 문서를 가져와야한다는것을 명시.
+  * 파싱중에, HTML의 link 태그를 만나면, DOM tree 생성이 중단되고, link된 CSS 를 Load, Parse 하고 CSSOM tree를 만든한뒤에, 다시 HTML의 파싱과 DOM tree 생성을 재개한다.
+  * 파싱중에 script 태그를 만나면, 다시 파싱과 DOM tree를 중단하고, JavaScript 엔진에게 렌더링 권한을 넘겨 load, parse 하고 Syntax tree를 만든후에 다시 HTML로 파서 권한이 돌아가서 남은 파싱을 완료한다.
+    * JavaScript 엔진이 파일을 로딩하고 파싱하여 AST를 생성, 바이트코드를 실행.
+      * 자바스크립트 파일의 소스코드는 문자열로 구성되어 있으므로,  파싱을할때 소스 코드를 해석하여 문법적 의미와 구조를 갖는 구조인 AST(Abstract Syntax Tree)를 생성, 이걸 통해 바이트 코드 생성후 실행.
+        - Tokenizing: 소스 코드 문자열을 분석(Lexical analysis)하여 의미를 갖는 코드의 최소단위인 토큰(Token)들로 쪼갠다.
+        - Parsing: 토큰들의 집합을 구문 분석(Syntactic analysis)하여 AST생성.
+        - 코드 실행: 생성된 AST는 interpreter를 실행할수있는 Intermediate code인 bytecode로 변환되고 interpreter에 의해 실행된다.
+      * AST는 Interpreter 나 Compiler만이 사용하는것이 아니다. AST로 TypeScript, Prettier Babel같은 트랜스파일러도 구현할 수 있다.
+    * Syntax tree는 DOM tree 와 CSSOM tree 를 조작하고 수정하고, 둘이 결합되어 Render tree 생성.
   * Script 태그의 위치에따라 블로킹이 생겨 DOM 생성이 지연될수도 있다. HTML이 DOM객체로 변환되기 이전에 JavaScript가 실행되면 블로킹이된다. 따라서 Script태그 위치는 중요하다(보통 body태그 끝나기전에 넣음).
     * async: 웹페이지의 파싱과 외부 스크립트 파일의 다운로드가 동시에 진행. script 다운 완료후 실행됨.
     * defer:웹페이지 파싱과 외부 스크립트 파일 다운로드 동시 진행. 스크립트는 웹페이지 파싱 이후 실행.
   * DOM tree, CSSOM tree가 만들어지면, 둘이 합쳐져 Render tree를 만들고, Render tree를 기반으로 painting이 시작되고 웹페이지가 표시된다.
 
-  
-
-* 소스코드는 문자열로 구성되어 있으므로, 소스 코드를 해석하여 문법적 의미와 구조를 갖는 구조인 AST(Abstract Syntax Tree)를 생성, 이걸 통해 바이트 코드 생성후 실행.
-	* Tokenizing: 소스 코드 문자열을 분석(Lexical analysis)하여 의미를 갖는 코드의 최소단위인 토큰(Token)들로 쪼갠다.
-	* Parsing: 토큰들의 집합을 구문 분석(Syntactic analysis)하여 AST생성.
-	* 코드 실행: 생성된 AST는 interpreter를 실행할수있는 Intermediate code인 bytecode로 변환되고 interpreter에 의해 실행된다.
-* AST는 Interpreter 나 Compiler만이 사용하는것이 아니다. AST로 TypeScript, Prettier Babel같은 트랜스파일러도 구현할 수 있다.
 
 
 
