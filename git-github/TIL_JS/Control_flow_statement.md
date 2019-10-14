@@ -34,67 +34,86 @@
 * if...else문은 삼항 조건 연산자로 바꿔 쓸 수 있다. 
 
   * // x가 짝수이면 문자열 '짝수' 반환, 홀수이면 문자열 '홀수'를 반환.
-    var x = 2;
+    
+    ```
+var x = 2;
     var result;
-
+    
     if (x % 2) { // 2 % 2는 0이고 0은 false로 취급된다
       result = '홀수';
     } else {
-      result = '짝수';
+  result = '짝수';
     }
 
     console.log(result); // 짝수
-
-    **결과가 0이면 0 은 False임으로 '짝수' 로 반환된다.**
-
+```
+    
+**결과가 0이면 0 은 False임으로 '짝수' 로 반환된다.**
     
 
+    
     **삼항 조건 연산자로 바꾸면:**
 
+    ```
     // x가 짝수이면 문자열 '짝수'를 반환하고 홀수이면 문자열 '홀수'를 반환한다.
-    var x = 2;
-
+var x = 2;
+    
     **0은 false로 취급된다**.
     var result = x % 2 ? '홀수' : '짝수';
-
+    
     console.log(result); // 짝수
+    ```
 
 
 
-​			  **세가지 경우의 수(양수, 음수, 영):**
+**세가지 경우의 수(양수, 음수, 영):**
 
-​			  var num = 2;
+삼항 조건 연산자:
 
-​			  **num이 0이 아니면 크면 true가 되므로 좌변에서 한번더 평가.**
+```
+var num = 2;
 
-​			  **0보다 크면 true로 '양수', 작으면 false로 '음수' 반환**
+// num이 0이 아니면 크면 true가 되므로 좌변에서 한번더 평가.
 
-​			  var kind = num ? (num > 0 ? '양수' : '음수') : '영';
+// 0보다 크면 true로 '양수', 작으면 false로 '음수' 반환
 
-​			  console.log(kind); // 양수
+var kind = num ? (num > 0 ? '양수' : '음수') : '영';
+
+console.log(kind); // 양수
+```
 
 
 
 #### switch 문
 
 * 주어진 표현식을 평가하여 값과 일치하는 표현식을 갖는 case문으로 실행 순서 이동.
+
 * 상황(case)을 의미하는 표현식을 지정하고 콜론으로 마친다.
-  * switch (표현식) {
-      case 표현식1:
-        switch 문의 표현식과 표현식1이 일치하면 실행될 문;
-        break;
-      case 표현식2:
-        switch 문의 표현식과 표현식2가 일치하면 실행될 문;
-        break;
-      default:
-        switch 문의 표현식과 일치하는 표현식을 갖는 case 문이 없을 때 실행될 문;
-    }
+  ```
+  switch (표현식) {
+  case 표현식1:
+    switch 문의 표현식과 표현식1이 일치하면 실행될 문;
+    break;
+  case 표현식2:
+    switch 문의 표현식과 표현식2가 일치하면 실행될 문;
+    break;
+  default:
+    switch 문의 표현식과 일치하는 표현식을 갖는 case 문이 없을 때 실행될 문;
+  }
+  ```
+  
 * switch 문의 표현식과 일치하는 것이 없다면 default로 이동한다.
+
 * switch문의 표현식은 Boolean값보다 문자열, 숫자 값인 경우가 많다.
+
 * if...else문과 다르게 true/false보다는 다양한 상황(case)에 따라 실행할 코드블록을 결정한다.
+
 * 중간에 break문을 사용하지 않으면, case를 만난후에 탈출하지않고 마지막 case후 default까지 실행되어서 default가 반환된다. 이를 폴스루(fall through)라고 한다.
+  
   * **break 문으로 해당하는 case일경우 탈출할 수 있게 해줘야한다.**
+  
 * default 문은 일반적으로 마지막에 위치하므로 실행이 종료되면 switch문을 빠져나가기에 별도로 break 문이 필요하지 않다.
+
 * case, default, break 등 다양한 키워드를 사용해야하고 fall through가 발생하는 등 복잡하다. if...else문으로 해결할 수 있다면 사용하는게 낫다. 하지만 switch문을 사용했을때 가독성이 더 좋다면 switch문을 사용하는게 좋다.
 
 
@@ -118,11 +137,8 @@
 
     }
 
-  * for 문 실행 순서:(i++ 이여서 선할당 후증가한다.)
 
 ![img](https://poiemaweb.com/assets/fs-images/7-1.png)
-
-
 
 #### while 문
 
@@ -130,49 +146,56 @@
 
 * 평가 결과가 거짓이 되면 실행 종료, 평가 결과가 불리언 값이 아니라면 강제로 불리언 값으로 변환된다.
 
-  * var count = 0;
+  ```
+  var count = 0;
+  
+  while (count < 3) {
+  
+  console.log(count);
+  
+  count++;
+  
+  } // 0 1 2
+  ```
 
-    while (count < 3) {
-
-    console.log(count);
-
-    count++;
-
-    } // 0 1 2
+  
 
 * 조건식의 평가 결과가 언제나 참이면 무한루프가 된다.
 
   * 무한루프를 탈출하려면 블록 내의 if문으로 탈출 조건을 만들고 break로 탈출한다.
 
-    * var count = 0;
-
-      while (true) {
-
-      ​	console.log(count);
-
-      ​	count++;
-
-      if (count === 3) break;
-
-      } // 0 1 2
-
-
+    ```
+var count = 0;
+    
+while (true) {
+    
+	console.log(count);
+    
+	count++;
+    
+if (count === 3) break;
+    
+    } // 0 1 2
+    ```
+    
+    
 
 #### do...while 문
 
 * 코드 블록을 먼저 실행하고 조건식을 평가한다. 코드 블록은 무조건 한번 이상 실행된다.
 
-  * var count = 0;
-
-    do {
-
-    ​	console.log(count);
-
-    ​	count++;
-
-    } while ( count < 3); // 0 1 2
-
-  * **while 이 충족되는한 계속 실행된다.**
+  ```
+var count = 0;
+  
+do {
+  
+	console.log(count);
+  
+	count++;
+  
+} while ( count < 3); // 0 1 2
+  // while 이 충족되는한 계속 실행된다.
+  ```
 
 
 
