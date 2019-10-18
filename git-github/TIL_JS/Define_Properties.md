@@ -33,9 +33,12 @@
 
 * 내부 슬롯(Internal slot)과 내부 메소드(Internal method)는 ECMAScript스펙에서 요구하는 객체와 관련된 내부 상태와 동작을 정의한것이다.
 
-* ECMAScript스펙에서 사용하는 Pseudo property(의사 프로퍼티)와 의사 메소드(Pseudo method)다.
-
 * 자바스크립트 엔진의 내부 구현 사양을 정의한 것으로 ECMAScript 사양의 만족을 요구할 뿐, 이를 외부로 노출시키지는 않는다.
+
+* 대부분의 내부 슬롯/메소드는 비공개다.
+
+  * 접근하고 수정할수 있으면 엔진을 바꿀수 있게되어 비공개로 한다.
+  * 일부의 내부 슬롯/메소드들은 접근할 수 있다.
 
 * 내부 슬롯/메소드는 객체의 프로퍼티가 아니다.
 
@@ -50,25 +53,32 @@
 
     > 프로토타입과 프로토타입 체인
     >
-    > 프로토타입은 어떤 객체의 상위 객체의 역할을 하는 객체이다. 프로토타입은 하위 객체에게 자신의 프로퍼티와 메소드를 상속한다. 프로토타입 체인은 단방향 링크드 리스트 형태로 연결된 상속 구조다. 객체의 프로퍼티나 메소드에 접근하려고 할 때 해당 객체에 접근하려는 프로퍼티 또는 메소드가 없다면 프로토타입 체인을 따라 차례대로 검색한다.
+    > 프로토타입은 어떤 객체의 상위 객체의 역할을 하는 객체이다. 프로토타입은 하위 객체에게 자신의 프로퍼티와 메소드를 상속한다. 프로토타입 체인은 단방향 linked 리스트 형태로 연결된 상속 구조다. 객체의 프로퍼티나 메소드에 접근하려고 할 때 해당 객체에 접근하려는 프로퍼티 또는 메소드가 없다면 프로토타입 체인을 따라 차례대로 검색한다.
 
-  * 검색된 property가 "데이터 프로퍼티(Data property)"라면 프로퍼티 값, 즉 데이터 프로퍼티의 프로퍼티 어트리뷰트[[Value]]의 값을 반환.
+  * 검색된 property가 "데이터 프로퍼티(Data property)"라면 프로퍼티 값([[Value]] attribue)을 반환.
 
   * 프로퍼티가 접근자 프로퍼티(Accessor property)라면 접근자 프로퍼티의 프로퍼티 어트리뷰트 [[Get]]의 값, 즉 getter 함수를 호출해 결과를 반환한다.
 
 
 
-## 접근자 프로퍼티
+## 데이터/접근자 프로퍼티
 
 **프로퍼티는 데이터 프로퍼티와 접근자 프로퍼티로 구분할 수 있다**
 
 * 데이터 프로퍼티(Data property)
 
-  * 키와 값으로 구성된 일반적 프로퍼티다. 지금까지 본 모든 프로퍼티는 데이터 프로퍼티다.
+  * 키와 값으로 구성된 일반적 프로퍼티다. 
+  * console.log(Object.getOwnPropertyDescriptors); 로 attribute을 확인할 수 있다.
+  * 접근자에 없는 value값이 있고, writable(재정 가능), enumerable(열거 가능), configurable(설정 가능(위에것들 수정)) 어트리뷰트 들이 있다.
+  * 프로퍼티에 value가 있다면 데이터 프로퍼티고, JavaScript에서 value는 공개된다(public).
 
 * 접근자 프로퍼티(Accessor property)
 
-  * 자체적으로는 값을 갖지 않고 다른 데이터 프로퍼티의 값을 읽거나 저장할 때 사용하는 접근자 함수(Accessor function)로 구성된 프로퍼티.
+  * value를 갖지 않고 다른 데이터 프로퍼티의 값을 읽거나 저장할 때 사용하는 접근자 함수(Accessor function)로 구성된 프로퍼티.
+
+* 다른 데이터 프로퍼티의 value attribute를 조작하는 함수다.
+
+*  get, set, enumerable, configurable attribute들을 갖는다.
 
 * 접근자 함수는 getter/setter 함수라고도 부른다.
 
@@ -83,11 +93,11 @@
     // fullName은 접근자 함수로 구성된 접근자 프로퍼티이다.
     // getter 함수
     get fullName() {
-      return this.firstName + ' ' + this.lastName;
+      return `${this.firstName} ${this.lastName}`
     },
     // setter 함수
-    set fullName(name) {
-      [this.firstName, this.lastName] = name.split(' ');
+    set changeFirstName(name) {
+      this.firstName = firstName;
     }
   };
   
@@ -96,25 +106,21 @@
   
   // 접근자 프로퍼티를 통한 프로퍼티 값의 저장
   // 접근자 프로퍼티 fullName에 값을 저장하면 setter 함수가 호출된다.
-  person.fullName = 'Heegun Lee';
+  person.changeFirstName = 'Heegun Lee';
   console.log(person); // {firstName: "Heegun", lastName: "Lee"}
-  
-  // 접근자 프로퍼티를 통한 프로퍼티 값의 참조
-  // 접근자 프로퍼티 fullName에 접근하면 getter 함수가 호출된다.
-  console.log(person.fullName); // Heegun Lee
   
   // firstName는 데이터 프로퍼티이다.
   let descriptor = Object.getOwnPropertyDescriptor(person, 'firstName');
   console.log(descriptor);
   // {value: "Heegun", writable: true, enumerable: true, configurable: true}
   
-  // fullName는 접근자 프로퍼티이다.
+  // changeFirstName는 접근자 프로퍼티이다.
   // 접근자 프로퍼티는 get, set, enumerable, configurable 프로퍼티 어트리뷰트를 갖는다.
   descriptor = Object.getOwnPropertyDescriptor(person, 'fullName');
   console.log(descriptor);
   // {get: ƒ, set: ƒ, enumerable: true, configurable: true}
   ```
-
+  
 * 접근자 프로퍼티는 자체적으로 값(value property attribute)을 가지지 않고 데이터 프로퍼티의 값을 읽거나 저장할 때 관여만 한다.
 
 * 접근자 프로퍼티로 프로퍼티 값에 접근하면 내부 메소드가 호출되어 동작.
@@ -124,19 +130,9 @@
   3. 검색된 프로퍼티가 데이터 프로퍼티인지 접근자 프로퍼티인지 확인.
   4. 접근자 프로퍼티면 getter,setter함수를 호출한다.
 
-* 접근자 프로퍼티와 데이터 프로퍼티 구별 방법:
+* [[Prototype]]은 내부 슬롯, -_proto__는 접근자 프로퍼티다.
 
-  ```
-  // 일반 객체의 __proto__는 접근자 프로퍼티이다.
-  Object.getOwnPropertyDescriptor(Object.prototype, '__proto__');
-  // {get: ƒ, set: ƒ, enumerable: false, configurable: true}
-  
-  // 함수 객체의 prototype은 데이터 프로퍼티이다.
-  Object.getOwnPropertyDescriptor(function() {}, 'prototype');
-  // {value: {…}, writable: true, enumerable: false, configurable: false}
-  ```
 
-* Object.getOwnPropertyDescriptor 메소드의 반환값이 다르다.
 
 
 
