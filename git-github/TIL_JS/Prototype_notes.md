@@ -1,10 +1,3 @@
-* 모든 함수 객체는 일반 객체에 없는 arguments과 length프로퍼티를 가지고있다(JavaScript엔진한테 바인딩 받는다). length를 가지므로 유사 배열 객체이다.
-* arguments는 함수의 모든 인수를 저장한다.
-* 함수의 length property는 매개 변수의 개수.
-* arguments 의 length property는 인수의 개수.
-
-
-
 # Prototype
 
 * **Prototype: 상속을 구현하는 것.**
@@ -101,7 +94,7 @@
   console.log(Object.getPrototypeOf(person)) === Object.prototype); // true
   ```
 
-* _ _proto__와 Object.getPrototypeOf()는 같은 기능을 하지만, 메소드 이름이 제데로된 Object.getPrototypeOf()를 사용하자.
+* _ _proto__와 Object.getPrototypeOf()는 같은 기능을 하지만, 메소드 이름이 ES5 까지는 비표준이여서 Object.getPrototypeof()를 사용하자.
 * 객체는 createObject 라는 추상 연산이 만든다.
   * 빈객체를 만든다.
   * 프로퍼티 키와 값들을 propertyDescriptor로 객체에 추가한다.
@@ -162,7 +155,10 @@ console.log(obj.x); // 1
 
 * 빌트인 생성자 함수는 전부 전역 객체(Object.prototype) 소속이다.
 
-* 전역 객체(window)가 생길때 생성된다(브라우저가 실행될때)
+* 전역 객체(window)가 생길때(브라우저가 실행되자마자) 빌트인 생성자함수 Object가 생성된다.
+
+  * 빌트인 생성자 함수와 같이 프로토타입들이 생성된다.
+  * 생성자 함수 Object의 prototype프로퍼티에 바인딩된다.
 
    ![img](https://poiemaweb.com/assets/fs-images/18-15.png) 
 
@@ -172,4 +168,314 @@ console.log(obj.x); // 1
 
 
 #### Object 생성자 함수에 의해 생성된 객체의 프로토타입
+
+* Object.create(null) : 상위에 프로토타입이 없다. 상속받는 프로퍼티가 없다.
+
+
+
+## 캡슐화
+
+* 객체 캡슐화: 약처럼 안에있는 쓴맛을 캡슐로 감춰서 쓴맛을 못느끼게 한다.
+  * 객체의 공개할 프로퍼티와 공개하지 않을 프로퍼티를 구분한다.
+  * 정보은폐다.
+    * 클래스 기반 언어는 public, private, protected 접근제한자가 있다.
+    * public: 다른 객체에 있는 것들도 이 객체의 것들을 참조할 수 있다.
+    * protected: 상속된 관계에서만 보여진다.
+  * 자바스크립트는 접근제한자가 없어 모든게 public이다.
+  * 자바스크립트는 클로저로 캡슐화를 한다.
+* 프로퍼티(상태)들이나 메소드(동작)들을 외부에서 접근하지 못하게 한다.
+* 중첩 함수는 모듈 패턴으로 외부에서 접근할수 있게 할 수 있다.
+* this는 기본적으로 public이어서 this.name을 하면 name이 public된다.
+  * 변수로 묶어서 해결한다.
+
+* 모든 함수는 자신이 생성될때 자신의 상위 스코프를 기억한다.
+
+* [[Environment]] 를 자바스크립트 렉시컬 환경 자료구조.
+* 자바스크립트는 클로져로서 private이 없어도 정보은폐를 할수 있다.
+
+
+
+## 오버라이딩과 프로퍼티 쉐도잉
+
+* 프로토타입 메소드를 주고 인스턴스 에도 메소드를 준후에 메소드를 호출하면 식별자인 인스턴스에 가까운 메소드를 찾아서 호출한다.
+
+  ```
+    // 프로토타입 메소드
+    Person.prototype.sayHello = function () {
+      console.log(`Hi! My name is ${this.name}`);
+    };
+    
+    // 인스턴스 메소드
+  me.sayHello = function () {
+    console.log(`Hey! My name is ${this.name}`);
+  };
+  
+  // 인스턴스 메소드가 호출된다. 프로토타입 메소드는 인스턴스 메소드에 의해 가려진다.
+  me.sayHello(); // Hey! My name is Lee
+  ```
+
+   ![img](https://poiemaweb.com/assets/fs-images/18-25.png) 
+
+```
+const Person = (function () {
+  // 생성자 함수
+  function Person(name) {
+    this.name = name;
+  }
+
+  // 프로토타입 메소드
+  Person.prototype.sayHello = function () {
+    console.log(`Hi! My name is ${this.name}`);
+  };
+
+  // 생성자 함수를 반환
+  return Person;
+}());
+
+const me = new Person('Lee');
+
+// 인스턴스 메소드
+me.sayHello = function () {
+  console.log(`Hey! My name is ${this.name}`);
+};
+
+// 인스턴스 메소드가 호출된다. 프로토타입 메소드는 인스턴스 메소드에 의해 가려진다.
+me.sayHello(); // Hey! My name is Lee
+```
+
+* this 바인딩을 바꿀수 있다. 
+
+* prototype method를 호출하면 this의 값을 몰라 undefined 반환.
+
+  > 오버라이딩(Overriding)
+  >
+  > 상위 클래스가 가지고 있는 메소드를 하위 클래스가 재정의하여 사용하는 방식이다.
+  >
+  > 오버로딩(Overloading)
+  >
+  > 함수의 이름은 동일하지만 매개변수의 타입 또는 개수가 다른 메소드를 구현하고 매개변수에 의해 메소드를 구별하여 호출하는 방식이다. 자바스크립트는 오버로딩을 지원하지 않지만 arguments 객체를 사용하여 구현할 수는 있다.
+
+
+
+## 프로토타입의 교체
+
+* [[SetPrototypeOf]] 메소드로 프로토타입을 교체할 수 있다.
+
+  #### 생성자 함수로 프로토타입 교체
+
+  ```
+  const Person = (function () {
+    function Person(name) {
+      this.name = name;
+    }
+  
+    // ① 생성자 함수의 prototype 프로퍼티를 통해 프로토타입을 교체
+    Person.prototype = {
+      sayHello() {
+        console.log(`Hi! My name is ${this.name}`);
+      }
+    };
+  
+    return Person;
+  }());
+  
+  const me = new Person('Lee');
+  ```
+
+* Person.prototype을 재할당 해서 프로토타입을 교체했다.
+
+* 링크가 깨지지만 프로토타입 체인에는 문제가 없다.
+
+  * constructor 프로퍼티가 없다.
+
+   ![img](https://poiemaweb.com/assets/fs-images/18-26.png) 
+
+
+
+#### 인스턴스를 통한 프로토타입 교체
+
+```
+function Person(name) {
+  this.name = name;
+}
+
+const me = new Person('Lee');
+
+// 프로토타입으로 교체할 객체
+const parent = {
+  sayHello() {
+    console.log(`Hi! My name is ${this.name}`);
+  }
+};
+
+// ① me 객체의 프로토타입을 parent 객체로 교체한다.
+Object.setPrototypeOf(me, parent);
+// 위 코드는 아래의 코드와 동일하게 동작한다.
+// me.__proto__ = parent;
+
+me.sayHello(); // Hi! My name is Lee
+```
+
+ ![img](https://poiemaweb.com/assets/fs-images/18-27.png) 
+
+* Person도 prototype가 사라지고, parent도 construct가 없어서 프로토타입 체인에따라 상위로 올라간다.
+* parent에는 constructor가 없어 프로토타입 체인을 따라 Object.prototype의 constructor로 가서 생성자 함수가 Object가 된다.
+
+
+
+## 직접 상속
+
+#### Object.create에 의한 직접 상속
+
+* Object.create method는 명시적으로 프로토타입을 지정하고 새로운 객체를 생성한다.
+
+* new 연산자 없이도 객체를 생성할 수 있다.
+
+* 프로토타입을 지정하면서 객체를 생성할 수 있다. 이때 생성자 함수와 프로토타입 간의 링크가 파괴되지 않는다.
+
+* 객체 리터럴에 의해 생성된 객체도 특정 객체를 상속받을 수 있다.
+
+* 링크를 파괴하는 방식이 아닌 Object.create로 상속시켜줘야된다.
+
+  ```
+  const obj = { a: 1 };
+  const child = Object.create(obj);
+  
+  console.log(obj.hasOwnProperty('a'));       // true
+  console.log(obj.isPrototypeOf(child));      // true
+  console.log(obj.propertyIsEnumerable('a')); // true
+  ```
+
+* console.log(obj.hasOwnProperty('a')); 보다
+
+  ```
+  // 프로토타입이 null인 객체를 생성한다.
+  const obj = Object.create(null);
+  obj.a = 1;
+  
+  // console.log(obj.hasOwnProperty('a')); // TypeError: obj.hasOwnProperty is not a function
+  
+  // Object.prototype의 빌트인 메소드는 객체로 직접 호출하지 않는다.
+  console.log(Object.prototype.hasOwnProperty.call(obj, 'a')); // true
+  ```
+
+* console.log(Object.prototype.hasOwnProperty.call(obj, 'a'));
+* Object.create(null)로 프로토타입 체인 종점에 있는 객체일 수 있기 때문에 hasOwnProperty를 사용하지 말자.
+
+
+
+## 객체 리터럴 내부에서 __proto__에 의한 직접 상속
+
+```
+const myProto = { x: 10 };
+
+// 객체 리터럴에 의해 객체를 생성하면서 프로토타입을 지정하여 직접 상속받을 수 있다.
+const obj = {
+  y: 20,
+  // 객체를 직접 상속받는다.
+  // obj → myProto → Object.prototype → null
+  __proto__: myProto
+};
+// 위 코드는 아래와 동일하다.
+// const obj = Object.create(myProto, { y: { value: 20 } });
+
+console.log(obj.x, obj.y); // 10 20
+console.log(Object.getPrototypeOf(obj) === myProto); // true
+```
+
+
+
+## 정적 프로퍼티/메소드
+
+* 프로토타입 메소드와 인스턴스 메소드는 인스턴스를 만들어야 호출할수 있다.
+
+* 정적 메소드는 인스턴스와 상관없이 언제든 호출할 수 있다.
+
+   ![img](https://poiemaweb.com/assets/fs-images/18-32.png) 
+
+
+
+## 프로퍼티 존재 확인
+
+```
+const person = {
+  name: 'Lee',
+  address: 'Seoul'
+};
+
+// person 객체에 name 프로퍼티가 존재한다. ''를 빼면 식별자를 찾는다.
+console.log('name' in person);    // true
+// person 객체에 address 프로퍼티가 존재한다.
+console.log('address' in person); // true
+// person 객체에 age 프로퍼티가 존재하지 않는다.
+console.log('age' in person);     // false
+// in은 상속관계에 있는 프로퍼티도 다나온다.
+console.log('toString' in person); // true
+// Object.prototype.hasOwnProperty 메소드를 사용해도 객체의 프로퍼티의 존재 여부를 확인할 수 있다.
+console.log(person.hasOwnProperty('name')); // true
+console.log(person.hasOwnProperty('age'));  // false
+```
+
+
+
+## 프로퍼티 열거
+
+* 열거: 프로퍼티를 하나하나 나열해서 보는것.
+
+  #### for...in문
+
+  ```
+  // in 연산자는 객체가 상속받은 모든 프로토타입의 프로퍼티를 확인한다.
+  console.log('toString' in person); // true
+  
+  // for...in 문도 객체가 상속받은 모든 프로토타입의 프로퍼티를 열거한다.
+  // 하지만 toString과 같은 Object.prototype의 프로퍼티가 열거되지 않는다.
+  for (const prop in person) {
+    console.log(prop + ': ' + person[prop]);
+  }
+  
+  // name: Lee
+  // address: Seoul
+  ```
+
+* 상속받은 프로토타입의 프로퍼티를 제외하고 열거:
+
+```
+const person = {
+  name: 'Lee',
+  address: 'Seoul',
+  __proto__: { age: 20 }
+};
+
+for (const prop in person) {
+  // 객체 자신의 프로퍼티인지 확인한다.
+  if (!person.hasOwnProperty(prop)) continue; // 다시 위로 올라간다
+  console.log(prop + ': ' + person[prop]);
+}
+
+// name: Lee
+// address: Seoul
+```
+
+
+
+#### Object.keys/values/entries 메소드
+
+* keys: 프로퍼티 키들을 자료구조인 배열에 담아서 반환한다.
+* values: 프로퍼티 값들을 배열에 담아서 반환한다.
+* entries: key 와 value 들을 찍지어 배열로 반환한다.
+
+```
+const person = {
+  name: 'Lee',
+  address: 'Seoul',
+  __proto__: { age: 20 }
+};
+
+console.log(Object.keys(person)); // ["name", "address"]
+console.log(Object.values(person)); // ["Lee", "Seoul"]
+console.log(Object.entries(person)); // [["name", "Lee"], ["address", "Seoul"]]
+```
+
+* ____proto____는 Object.prototype의 접근자 프로퍼티로 enumerable 값이 false여서 열거가 불가능하다.
 
